@@ -2,14 +2,21 @@ import pytest
 from calculator.calculator.basic_calc import BasicCalc, CalcWithMemory
 import os
 
+
 @pytest.fixture(scope="function")
 def calculator(tmp_path):
     """Фикстура для создания экземпляра BasicCalc."""
     calc = BasicCalc()
     calc.log_file = tmp_path / "calc_log.txt"
+    # Удаляем файл, если он уже существует (на случай повторного использования)
+    if os.path.exists(calc.log_file):
+        os.remove(calc.log_file)
     yield calc
-    # Финализатор: проверяем, что файл удалён после теста
+    # Финализатор: удаляем файл и проверяем
+    if os.path.exists(calc.log_file):
+        os.remove(calc.log_file)
     assert not os.path.exists(calc.log_file), f"Файл {calc.log_file} не был удалён после теста"
+
 
 @pytest.fixture(scope="function")
 def calculator_with_memory(tmp_path):
@@ -17,10 +24,16 @@ def calculator_with_memory(tmp_path):
     CalcWithMemory._instance = None
     calc = CalcWithMemory()
     calc.log_file = tmp_path / "calc_log.txt"
+    # Удаляем файл, если он уже существует
+    if os.path.exists(calc.log_file):
+        os.remove(calc.log_file)
     calc.memo_plus(10)  # Предустановленное значение в памяти
     yield calc
-    # Финализатор: проверяем, что файл удалён после теста
+    # Финализатор: удаляем файл и проверяем
+    if os.path.exists(calc.log_file):
+        os.remove(calc.log_file)
     assert not os.path.exists(calc.log_file), f"Файл {calc.log_file} не был удалён после теста"
+
 
 @pytest.fixture(params=[
     (2, 2, 4.0),
