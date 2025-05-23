@@ -1,14 +1,10 @@
 import pytest
 
-from calculator.calculator.basic_calc import CalcWithMemory
 
-def test_last_value():
-    calc = CalcWithMemory()
-    calc.memory = [1,2,3]
-    assert calc.last_value == 3
+def test_last_value(calculator_with_memory):
+    assert calculator_with_memory.last_value == 10, "Инициирован как 10"
 
-def test_negative_last_value():
-    calc = CalcWithMemory()
-    calc.memory = []
+def test_negative_last_value(calculator_with_memory):
+    calculator_with_memory.memory = []
     with pytest.raises(IndexError):
-        calc.last_value()
+        calculator_with_memory.last_value()

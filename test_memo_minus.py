@@ -1,15 +1,11 @@
 import pytest
-from calculator.calculator.basic_calc import CalcWithMemory
 
-def test_memo_minus():
-    calc = CalcWithMemory()
-    calc.memory = [5]
-    result = calc.memo_minus()
-    assert result == 5
-    assert calc.memory == []
+def test_memo_minus(calculator_with_memory):
+    result = calculator_with_memory.memo_minus()
+    assert result == 10, "Память инициируется как 10"
+    assert calculator_with_memory.memory == []
 
-def test_negative_memo_minus():
-    calc = CalcWithMemory()
-    calc.memory = []
+def test_negative_memo_minus(calculator_with_memory):
+    calculator_with_memory.memo_minus()
     with pytest.raises(IndexError, match='Память пуста, нечего удалить из памяти или взять'):
-        calc.memo_minus()
+        calculator_with_memory.memo_minus()
